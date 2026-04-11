@@ -4,140 +4,77 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Saturday Dump — diananonea</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
   :root {
-    --bg: #0e0e0e;
-    --surface: #161616;
-    --surface2: #1e1e1e;
-    --border: #2a2a2a;
-    --border2: #333;
-    --text: #e8e4dc;
-    --muted: #666;
-    --muted2: #888;
-    --purple: #a89cf7;
-    --purple-dim: #2d2840;
-    --teal: #5ecfb0;
-    --teal-dim: #1a3530;
-    --amber: #f0b55a;
-    --amber-dim: #2e2210;
-    --coral: #f07a5a;
-    --coral-dim: #2e1810;
-    --mono: 'DM Mono', monospace;
-    --sans: 'DM Sans', sans-serif;
+    --bg: #0e0e0e; --surface: #161616; --surface2: #1e1e1e;
+    --border: #2a2a2a; --border2: #333; --text: #e8e4dc;
+    --muted: #666; --muted2: #888; --purple: #a89cf7;
+    --teal: #5ecfb0; --amber: #f0b55a; --coral: #f07a5a;
+    --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
   }
- 
   html { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.6; }
- 
   body { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
- 
   header { margin-bottom: 48px; }
   .header-label { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px; }
   h1 { font-size: 26px; font-weight: 300; color: var(--text); letter-spacing: -.02em; line-height: 1.2; }
   h1 span { color: var(--purple); }
-  .header-sub { font-size: 13px; color: var(--muted2); margin-top: 8px; line-height: 1.5; }
- 
-  .section { margin-bottom: 32px; }
+  .header-sub { font-size: 13px; color: var(--muted2); margin-top: 8px; }
+  .section { margin-bottom: 28px; }
   .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
   .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
- 
-  textarea {
+  textarea, input[type="text"], input[type="password"] {
     width: 100%; background: var(--surface); border: 1px solid var(--border);
     border-radius: 8px; color: var(--text); font-family: var(--sans); font-size: 14px;
-    line-height: 1.6; padding: 14px 16px; resize: vertical; min-height: 100px;
-    transition: border-color .2s;
+    line-height: 1.6; padding: 12px 16px; outline: none; transition: border-color .2s;
   }
-  textarea:focus { outline: none; border-color: var(--purple); }
-  textarea::placeholder { color: var(--muted); }
- 
-  .collab-row { display: flex; align-items: center; gap: 12px; }
+  textarea { resize: vertical; min-height: 90px; }
+  textarea:focus, input:focus { border-color: var(--purple); }
+  textarea::placeholder, input::placeholder { color: var(--muted); }
+  .toggle-row { display: flex; align-items: center; gap: 12px; }
   .toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
-  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
   .toggle-track { position: absolute; inset: 0; background: var(--border2); border-radius: 10px; cursor: pointer; transition: background .2s; }
   .toggle input:checked + .toggle-track { background: var(--purple); }
   .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: transform .2s; pointer-events: none; }
   .toggle input:checked ~ .toggle-thumb { transform: translateX(16px); }
   .toggle-label { font-size: 13px; color: var(--muted2); }
- 
   .collab-detail { margin-top: 10px; display: none; }
   .collab-detail.visible { display: block; }
- 
   .generate-btn {
-    width: 100%; padding: 14px; background: var(--purple-dim); border: 1px solid var(--purple);
+    width: 100%; padding: 14px; background: #2d2840; border: 1px solid var(--purple);
     border-radius: 8px; color: var(--purple); font-family: var(--mono); font-size: 13px;
-    letter-spacing: .06em; cursor: pointer; transition: background .2s, transform .1s;
-    margin-top: 8px;
+    letter-spacing: .06em; cursor: pointer; transition: background .2s;
   }
   .generate-btn:hover { background: #3a3060; }
-  .generate-btn:active { transform: scale(.99); }
   .generate-btn:disabled { opacity: .4; cursor: not-allowed; }
- 
   .output-area { margin-top: 40px; display: none; }
   .output-area.visible { display: block; }
- 
-  .video-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; margin-bottom: 16px; overflow: hidden;
-  }
-  .video-card-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px; border-bottom: 1px solid var(--border);
-  }
+  .video-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .video-card-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
   .video-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .video-type { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
   .video-format { font-size: 11px; color: var(--muted); margin-left: auto; font-family: var(--mono); }
- 
   .video-card-body { padding: 16px; }
- 
   .field-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; margin-top: 14px; }
   .field-label:first-child { margin-top: 0; }
- 
-  .screen-text {
-    background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 6px; padding: 10px 14px; font-size: 14px; font-weight: 500;
-    color: var(--text); line-height: 1.4; letter-spacing: -.01em;
-  }
- 
+  .screen-text { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 10px 14px; font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
   .tips-list { list-style: none; }
-  .tips-list li {
-    padding: 6px 0; border-bottom: 1px solid var(--border);
-    font-size: 13px; color: var(--muted2); display: flex; gap: 8px; align-items: flex-start;
-  }
+  .tips-list li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); display: flex; gap: 8px; }
   .tips-list li:last-child { border-bottom: none; }
-  .tips-list li::before { content: '·'; color: var(--purple); flex-shrink: 0; margin-top: 1px; }
- 
-  .caption-text {
-    font-size: 13px; color: var(--muted2); line-height: 1.65;
-    white-space: pre-wrap; font-family: var(--sans);
-  }
- 
-  .copy-btn {
-    margin-top: 10px; padding: 7px 14px; background: transparent;
-    border: 1px solid var(--border2); border-radius: 6px; color: var(--muted2);
-    font-family: var(--mono); font-size: 11px; letter-spacing: .06em; cursor: pointer;
-    transition: border-color .2s, color .2s;
-  }
+  .tips-list li::before { content: '·'; color: var(--purple); flex-shrink: 0; }
+  .caption-text { font-size: 13px; color: var(--muted2); line-height: 1.65; white-space: pre-wrap; }
+  .copy-btn { margin-top: 10px; padding: 7px 14px; background: transparent; border: 1px solid var(--border2); border-radius: 6px; color: var(--muted2); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; cursor: pointer; transition: border-color .2s, color .2s; }
   .copy-btn:hover { border-color: var(--purple); color: var(--purple); }
   .copy-btn.copied { color: var(--teal); border-color: var(--teal); }
- 
-  .loading {
-    text-align: center; padding: 40px; color: var(--muted);
-    font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
-  }
+  .loading { text-align: center; padding: 40px; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
   .loading-dot { display: inline-block; animation: blink 1.2s infinite; }
   .loading-dot:nth-child(2) { animation-delay: .2s; }
   .loading-dot:nth-child(3) { animation-delay: .4s; }
   @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
- 
-  .error { color: var(--coral); font-size: 13px; padding: 12px 16px; background: var(--coral-dim); border-radius: 8px; margin-top: 12px; }
- 
-  .week-badge {
-    display: inline-block; font-family: var(--mono); font-size: 10px;
-    padding: 3px 8px; border-radius: 4px; background: var(--surface2);
-    border: 1px solid var(--border); color: var(--muted); margin-bottom: 24px;
-  }
+  .error { color: var(--coral); font-size: 13px; padding: 12px 16px; background: #2e1810; border-radius: 8px; margin-top: 12px; }
+  .week-badge { display: inline-block; font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); margin-bottom: 24px; }
 </style>
 </head>
 <body>
@@ -148,32 +85,26 @@
   <div class="header-sub">Tell me what happened this week. I'll give you 3 ready-to-publish scripts.</div>
 </header>
  
-<div class="section">
-  <div class="section-label">your anthropic api key</div>
-  <input type="password" id="api-key" placeholder="sk-ant-..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:12px 16px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--border)'">
-  <div style="font-size:11px;color:var(--muted);margin-top:6px;font-family:var(--mono);">get it at console.anthropic.com · stays only in your browser, never sent anywhere else</div>
-</div>
- 
 <div id="week-badge" class="week-badge"></div>
  
 <div class="section">
   <div class="section-label">what happened with marnee this week</div>
-  <textarea id="marnee-dump" placeholder="What did you build, break, discover, or struggle with? First client feedback? Grant progress? A decision you made? Even if it was a slow week — what did you think about?" rows="4"></textarea>
+  <textarea id="marnee-dump" placeholder="What did you build, break, discover, or struggle with? First client feedback? Grant progress? Even if it was a slow week — what did you think about?" rows="4"></textarea>
 </div>
  
 <div class="section">
   <div class="section-label">your life in korea this week</div>
-  <textarea id="korea-dump" placeholder="Anything interesting, surprising, or annoying about living here? A café you worked from? A cultural thing you noticed? Something that happened with Caleb or a friend? Even small things." rows="3"></textarea>
+  <textarea id="korea-dump" placeholder="Anything interesting, surprising, or annoying about living here? A café you worked from? Something that happened with Caleb or a friend?" rows="3"></textarea>
 </div>
  
 <div class="section">
   <div class="section-label">how was your energy this week</div>
-  <textarea id="energy-dump" placeholder="High energy and building? Slow week, TDAH hitting hard? SPM? Stressed about grants or beta testing? This affects the storytelling tone." rows="2"></textarea>
+  <textarea id="energy-dump" placeholder="High energy and building? Slow week, TDAH hitting hard? SPM? Stressed about grants?" rows="2"></textarea>
 </div>
  
 <div class="section">
   <div class="section-label">collab this week</div>
-  <div class="collab-row">
+  <div class="toggle-row">
     <label class="toggle">
       <input type="checkbox" id="collab-toggle">
       <div class="toggle-track"></div>
@@ -205,16 +136,14 @@ function copyText(btn, text) {
   });
 }
  
-function videoCard(type, color, colorDim, format, fields) {
+function videoCard(type, color, format, fields) {
   const fieldHtml = fields.map(f => `
     <div class="field-label">${f.label}</div>
     ${f.type === 'screen' ? `<div class="screen-text">${f.content}</div>` : ''}
     ${f.type === 'tips' ? `<ul class="tips-list">${f.content.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
-    ${f.type === 'caption' ? `<div class="caption-text">${f.content}</div>` : ''}
     ${f.type === 'text' ? `<div class="caption-text">${f.content}</div>` : ''}
     <button class="copy-btn" onclick="copyText(this, ${JSON.stringify(f.copyText || f.content)})">copy</button>
   `).join('');
- 
   return `
     <div class="video-card">
       <div class="video-card-header">
@@ -223,8 +152,7 @@ function videoCard(type, color, colorDim, format, fields) {
         <div class="video-format">${format}</div>
       </div>
       <div class="video-card-body">${fieldHtml}</div>
-    </div>
-  `;
+    </div>`;
 }
  
 async function generate() {
@@ -235,16 +163,8 @@ async function generate() {
   const collab = document.getElementById('collab-dump').value.trim();
  
   if (!marnee && !korea) {
-    document.getElementById('output').innerHTML = '<div class="error">Fill in at least one field — what happened with Marnee or in Korea this week.</div>';
+    document.getElementById('output').innerHTML = '<div class="error">Fill in at least one field.</div>';
     document.getElementById('output').classList.add('visible');
-    return;
-  }
- 
-  const apiKey = document.getElementById('api-key').value.trim();
-  if (!apiKey) {
-    const o = document.getElementById('output');
-    o.innerHTML = '<div class="error">Paste your Anthropic API key at the top first.</div>';
-    o.classList.add('visible');
     return;
   }
  
@@ -256,107 +176,47 @@ async function generate() {
   output.classList.add('visible');
   output.innerHTML = '<div class="loading"><span class="loading-dot">.</span><span class="loading-dot">.</span><span class="loading-dot">.</span> building your week</div>';
  
-  const prompt = `You are a content strategist for Diana, a Spanish founder living in Seoul building Marnee (an AI CMO for startups). Her Instagram is @diananonea (7.4k followers). Her best-performing content is curiosity lists about Korea with 137k views.
- 
-Her content skeleton is:
-- VIDEO 1: Korea curiosities list (reach driver) — footage of her working at a café, text overlay with topic, tips list in caption
-- VIDEO 2: Korea curiosities list #2 (same format, different angle)  
-- VIDEO 3: Emotional storytelling — real moment from her week, longer, voice-over or text overlay
-- BONUS if collab: storytelling experience video
- 
-Her unique angle: Western founder building an AI startup from Korea. The building in public is always framed as Korea curiosities.
- 
-This week's dump:
-MARNEE/STARTUP: ${marnee || 'nothing specific'}
-KOREA/LIFE: ${korea || 'nothing specific'}
-ENERGY/STATE: ${energy || 'not specified'}
-${hasCollab ? `COLLAB: ${collab}` : 'NO COLLAB THIS WEEK'}
- 
-Generate exactly this JSON (no markdown, no explanation, just pure JSON):
-{
-  "video1": {
-    "screen_text": "short punchy text overlay (max 8 words, all lowercase, curiosity angle about Korea + founder life)",
-    "tips": ["tip 1", "tip 2", "tip 3", "tip 4", "tip 5"],
-    "caption": "full Instagram caption in English, conversational, ends with a question, relevant hashtags at bottom"
-  },
-  "video2": {
-    "screen_text": "different angle from video1, same format",
-    "tips": ["tip 1", "tip 2", "tip 3", "tip 4", "tip 5"],
-    "caption": "full Instagram caption in English"
-  },
-  "video3": {
-    "screen_text": "emotional hook text overlay (max 10 words)",
-    "voiceover": "30-60 second voiceover script, honest and raw, Diana's voice — direct, no fluff, real emotions, ends with something that makes people feel seen",
-    "caption": "full Instagram caption in English, more personal tone"
-  }
-  ${hasCollab ? `,
-  "collab": {
-    "screen_text": "experience hook text overlay",
-    "voiceover": "storytelling voiceover script for the collab experience, personal and warm",
-    "caption": "full Instagram caption mentioning the brand naturally"
-  }` : ''}
-}`;
- 
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-dangerous-direct-browser-access": "true" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
-      })
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ marnee, korea, energy, hasCollab, collab })
     });
  
-    const data = await response.json();
-    const text = data.content.map(i => i.text || '').join('');
-    const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    const parsed = await response.json();
+    if (parsed.error) throw new Error(parsed.error);
  
-    let html = '<div class="section-label" style="margin-bottom:20px;">this week\'s scripts <span style="color:var(--teal)">·</span> ready to use</div>';
+    let html = '<div class="section-label" style="margin-bottom:20px;">this week\'s scripts · ready to use</div>';
  
-    html += videoCard(
-      'curiosities #1', '#a89cf7', '#2d2840', '5–15 sec · café footage + text overlay',
-      [
-        { label: 'text overlay', type: 'screen', content: parsed.video1.screen_text, copyText: parsed.video1.screen_text },
-        { label: 'tips for caption', type: 'tips', content: parsed.video1.tips, copyText: parsed.video1.tips.map((t,i)=>`• ${t}`).join('\n') },
-        { label: 'full caption', type: 'caption', content: parsed.video1.caption, copyText: parsed.video1.caption }
-      ]
-    );
+    html += videoCard('curiosities #1', '#a89cf7', '5–15 sec · café footage + text overlay', [
+      { label: 'text overlay', type: 'screen', content: parsed.video1.screen_text },
+      { label: 'tips for caption', type: 'tips', content: parsed.video1.tips, copyText: parsed.video1.tips.map(t=>`• ${t}`).join('\n') },
+      { label: 'full caption', type: 'text', content: parsed.video1.caption, copyText: parsed.video1.caption }
+    ]);
  
-    html += videoCard(
-      'curiosities #2', '#a89cf7', '#2d2840', '5–15 sec · café footage + text overlay',
-      [
-        { label: 'text overlay', type: 'screen', content: parsed.video2.screen_text, copyText: parsed.video2.screen_text },
-        { label: 'tips for caption', type: 'tips', content: parsed.video2.tips, copyText: parsed.video2.tips.map((t,i)=>`• ${t}`).join('\n') },
-        { label: 'full caption', type: 'caption', content: parsed.video2.caption, copyText: parsed.video2.caption }
-      ]
-    );
+    html += videoCard('curiosities #2', '#a89cf7', '5–15 sec · café footage + text overlay', [
+      { label: 'text overlay', type: 'screen', content: parsed.video2.screen_text },
+      { label: 'tips for caption', type: 'tips', content: parsed.video2.tips, copyText: parsed.video2.tips.map(t=>`• ${t}`).join('\n') },
+      { label: 'full caption', type: 'text', content: parsed.video2.caption, copyText: parsed.video2.caption }
+    ]);
  
-    html += videoCard(
-      'emotional storytelling', '#5ecfb0', '#1a3530', '30–90 sec · voice-over or text',
-      [
-        { label: 'text overlay hook', type: 'screen', content: parsed.video3.screen_text, copyText: parsed.video3.screen_text },
-        { label: 'voice-over script', type: 'text', content: parsed.video3.voiceover, copyText: parsed.video3.voiceover },
-        { label: 'full caption', type: 'caption', content: parsed.video3.caption, copyText: parsed.video3.caption }
-      ]
-    );
+    html += videoCard('emotional storytelling', '#5ecfb0', '30–90 sec · voice-over or text', [
+      { label: 'text overlay hook', type: 'screen', content: parsed.video3.screen_text },
+      { label: 'voice-over script', type: 'text', content: parsed.video3.voiceover, copyText: parsed.video3.voiceover },
+      { label: 'full caption', type: 'text', content: parsed.video3.caption, copyText: parsed.video3.caption }
+    ]);
  
     if (parsed.collab) {
-      html += videoCard(
-        'collab storytelling', '#f0b55a', '#2e2210', 'storytelling format',
-        [
-          { label: 'text overlay hook', type: 'screen', content: parsed.collab.screen_text, copyText: parsed.collab.screen_text },
-          { label: 'voice-over script', type: 'text', content: parsed.collab.voiceover, copyText: parsed.collab.voiceover },
-          { label: 'full caption', type: 'caption', content: parsed.collab.caption, copyText: parsed.collab.caption }
-        ]
-      );
+      html += videoCard('collab storytelling', '#f0b55a', 'storytelling format', [
+        { label: 'text overlay hook', type: 'screen', content: parsed.collab.screen_text },
+        { label: 'voice-over script', type: 'text', content: parsed.collab.voiceover, copyText: parsed.collab.voiceover },
+        { label: 'full caption', type: 'text', content: parsed.collab.caption, copyText: parsed.collab.caption }
+      ]);
     }
  
     output.innerHTML = html;
- 
   } catch (err) {
-    output.innerHTML = '<div class="error">Something went wrong generating the scripts. Try again.</div>';
+    output.innerHTML = `<div class="error">${err.message || 'Something went wrong. Try again.'}</div>`;
   }
  
   btn.disabled = false;
