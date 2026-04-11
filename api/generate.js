@@ -1,6 +1,6 @@
-export const config = { runtime: 'edge' };
 
-export default async function handler(req) {
+
+export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
