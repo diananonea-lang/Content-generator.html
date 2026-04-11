@@ -1,12 +1,21 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export const config = { runtime: 'edge' };
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+export default async function handler(req) {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }
+    });
+  }
 
-  const { marnee, korea, energy, hasCollab, collab } = req.body;
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+  }
+
+  const { marnee, korea, energy, hasCollab, collab } = await req.json();
 
   const prompt = `You are a content strategist for Diana, a Spanish founder living in Seoul building Marnee (an AI CMO for startups). Her Instagram is @diananonea (7.4k followers). Her best-performing content is curiosity lists about Korea with 137k views.
 
@@ -38,7 +47,7 @@ Generate exactly this JSON (no markdown, no explanation, pure JSON only):
   },
   "video3": {
     "screen_text": "emotional hook text overlay (max 10 words)",
-    "voiceover": "30-60 second voiceover script, honest and raw, Diana's voice — direct, no fluff, real emotions, ends with something that makes people feel seen",
+    "voiceover": "30-60 second voiceover script, honest and raw, Diana voice direct no fluff real emotions ends with something that makes people feel seen",
     "caption": "full Instagram caption in English, more personal tone"
   }
   ${hasCollab ? `,
@@ -69,6 +78,16 @@ Generate exactly this JSON (no markdown, no explanation, pure JSON only):
     const clean = text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
-    res.status(200).json(parsed);
+    return new Response(JSON.stringify(parsed), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
   } catch (err) {
-    res.status(500).json({ error: 'Generation failed. Try again.' });
+    return new Response(JSON.stringify({ error: 'Generation failed. Try again.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
