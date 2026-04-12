@@ -18,7 +18,7 @@ Her content skeleton:
 - VIDEO 1: Korea curiosities list — cafe footage, text overlay, tips list in caption. Reach driver.
 - VIDEO 2: Korea curiosities list #2 — same format, different angle.
 - VIDEO 3: Emotional storytelling — real moment from her week, voice-over or text overlay.
-- BONUS if collab: storytelling experience video.
+${hasCollab ? '- BONUS collab: storytelling experience video.' : ''}
 
 Her unique angle: Western founder building an AI startup from Korea. Building in public is always framed as Korea curiosities.
 
@@ -26,9 +26,9 @@ This week:
 MARNEE/STARTUP: ${marnee || 'nothing specific'}
 KOREA/LIFE: ${korea || 'nothing specific'}
 ENERGY/STATE: ${energy || 'not specified'}
-${hasCollab ? `COLLAB: ${collab}` : 'NO COLLAB THIS WEEK'}
+${hasCollab ? `COLLAB: ${collab}` : ''}
 
-Respond ONLY with this JSON, no markdown, no explanation:
+Respond ONLY with valid JSON, no markdown, no backticks, no explanation:
 {"video1":{"screen_text":"short text overlay max 8 words all lowercase","tips":["tip 1","tip 2","tip 3","tip 4","tip 5"],"caption":"full instagram caption in english with hashtags"},"video2":{"screen_text":"different angle same format","tips":["tip 1","tip 2","tip 3","tip 4","tip 5"],"caption":"full instagram caption in english"},"video3":{"screen_text":"emotional hook max 10 words","voiceover":"30-60 second script honest raw Diana voice","caption":"personal instagram caption in english"}${hasCollab ? ',"collab":{"screen_text":"experience hook","voiceover":"warm storytelling script","caption":"caption mentioning brand naturally"}' : ''}}`;
 
   try {
@@ -41,17 +41,26 @@ Respond ONLY with this JSON, no markdown, no explanation:
       },
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1500,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
 
     const data = await response.json();
-    const text = data.content.map(i => i.text || '').join('');
+    
+    if (data.error) {
+      return res.status(500).json({ error: 'Anthropic error: ' + data.error.message });
+    }
+
+    if (!data.content || data.content.length === 0) {
+      return res.status(500).json({ error: 'Empty response from Anthropic. Data: ' + JSON.stringify(data) });
+    }
+
+    const text = data.content[0].text;
     const clean = text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
     res.status(200).json(parsed);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Error: ' + err.message });
   }
 }
