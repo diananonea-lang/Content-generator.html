@@ -5,8 +5,11 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST')if (!process.env.ANTHROPIC_API_KEY) {
-  return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not set in Vercel environment variables.' });
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not set in Vercel environment variables.' });
+  }
 
   const { marnee, korea, energy, hasCollab, collab } = req.body;
 
@@ -31,6 +34,9 @@ You MUST respond with ONLY a valid JSON object. No text before or after. No mark
 {"video1":{"screen_text":"short text overlay max 8 words all lowercase","tips":["tip 1","tip 2","tip 3","tip 4","tip 5"],"caption":"full instagram caption in english with hashtags"},"video2":{"screen_text":"different angle same format","tips":["tip 1","tip 2","tip 3","tip 4","tip 5"],"caption":"full instagram caption in english"},"video3":{"screen_text":"emotional hook max 10 words","voiceover":"30-60 second script honest raw Diana voice","caption":"personal instagram caption in english"}${hasCollab ? ',"collab":{"screen_text":"experience hook","voiceover":"warm storytelling script","caption":"caption mentioning brand naturally"}' : ''}}`;
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 55000);
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -42,9 +48,11 @@ You MUST respond with ONLY a valid JSON object. No text before or after. No mark
         model: 'claude-sonnet-4-6',
         max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
-      })
+      }),
+      signal: controller.signal
     });
 
+    clearTimeout(timeout);
     const data = await response.json();
 
     if (data.error) return res.status(500).json({ error: 'Anthropic error: ' + data.error.message });
@@ -57,6 +65,10 @@ You MUST respond with ONLY a valid JSON object. No text before or after. No mark
     const parsed = JSON.parse(jsonMatch[0]);
     res.status(200).json(parsed);
   } catch (err) {
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'The request to Anthropic timed out. Try again.' });
+    }
     res.status(500).json({ error: err.message });
   }
 }
+
